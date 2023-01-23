@@ -1,0 +1,45 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Klarinator3000.csproj",
+                "/property:GenerateFullPaths=true",d
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "args": [
+                "publish",
+                "-c",
+                "Release",
+                "-r",
+                "win-x64",
+                "--self-contained",
+                "true",
+                "-o",
+                "${workspaceFolder}/klarinator3000app"
+            ],
+            "type": "shell"
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/Klarinator3000.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}

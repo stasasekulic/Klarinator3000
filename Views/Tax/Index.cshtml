@@ -1,0 +1,15 @@
+﻿@using (Html.BeginForm("Upload", "Tax", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <label for="filePoreska">Poreska:</label>
+        <input type="file" name="filePoreska" id="filePoreska" accept=".pdf">
+    </div>
+    <div class="form-group">
+        <label for="filePotvrda">Potvrda:</label>
+        <input type="file" name="filePotvrda" id="filePotvrda" accept=".html">
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Perform THE MAGIC!" class="btn btn-primary">
+    </div>
+
+}
