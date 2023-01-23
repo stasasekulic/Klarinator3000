@@ -1,3 +1,6 @@
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
 using HtmlAgilityPack;
 using Klarinator3000.Utilities;
 
@@ -14,7 +17,6 @@ namespace Klarinator3000.Models
             CompanyName = GetCompanyName();
             ExtractWorkers();
         }
-
         private string GetCompanyName()
         {
             string result = string.Empty;
@@ -64,6 +66,23 @@ namespace Klarinator3000.Models
                         }
                     }
                     workersList.Add(new Worker(workerName, workerLastName, payments));
+                }
+            }
+        }
+        public void WriteToFile(string filePath)
+        {
+            if (workersList.Count > 0)
+            {
+                using (var writer = new StreamWriter(filePath))
+                using (var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)))
+                {
+                    csv.WriteField("PPP PO POTVRDE");
+                    csv.NextRecord();
+                    foreach (var item in workersList)
+                    {
+                        csv.WriteField(item);
+                        csv.NextRecord();
+                    }
                 }
             }
         }
