@@ -8,7 +8,7 @@
             "args": [
                 "build",
                 "${workspaceFolder}/Klarinator3000.csproj",
-                "/property:GenerateFullPaths=true",d
+                "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
