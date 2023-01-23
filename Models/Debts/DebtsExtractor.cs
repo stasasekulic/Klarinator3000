@@ -1,3 +1,6 @@
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
@@ -103,6 +106,25 @@ namespace Klarinator3000.Models
                 throw new ArgumentException("The number should be in the correct format : " + ammountString);
             }
         }
+        public void WriteToFile(string filePath)
+        {
+            if (Debts.Count > 0)
+            {
+                using (var writer = new StreamWriter(filePath))
+                using (var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)))
+                {
+                    csv.WriteField("ANALITICKA KARTICA");
+                    csv.NextRecord();
+                    foreach (var item in Debts)
+                    {
+                        csv.WriteField(item.Ammount);
+                        csv.WriteField(item.Month);
+
+                        csv.NextRecord();
+                    }
+                }
+            }
+        }
         private string FormatMonth(string monthNumber)
         {
             if (Enum.TryParse<MonthEnum>(monthNumber, out MonthEnum month))
@@ -134,7 +156,6 @@ namespace Klarinator3000.Models
         {
             public const int CompanyNameIndex = 6;
             public const int CompanyNamePageIndex = 1;
-
         }
     }
 
