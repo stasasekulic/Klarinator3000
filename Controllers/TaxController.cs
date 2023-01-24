@@ -12,7 +12,6 @@ public class TaxController : Controller
     IncomeCertificateViewModel? incomeCertificate;
     CalculationListsViewModel? calculationLists;
     private readonly ILogger<HomeController> _logger;
-
     public TaxController(ILogger<HomeController> logger)
     {
         _logger = logger;
@@ -33,27 +32,8 @@ public class TaxController : Controller
         {
             incomeCertificate = new IncomeCertificateViewModel(filePotvrda);
         }
-        if (fileObracunska != null && fileObracunska.Length > 0)
-        {
-            calculationLists = new CalculationListsViewModel(fileObracunska);
-        }
 
-        if (filePoreska != null && filePotvrda != null)
-        {
-            List<string> listForPrint = new();
-
-            foreach (var worker in incomeCertificate.incomeCertificateExtractor.workersList)
-            {
-                listForPrint.AddRange(worker.PayMentsList.Split(";"));
-            }
-            saveBothToDesktop(debts.debtsExtractor.Debts, listForPrint, incomeCertificate.incomeCertificateExtractor.CompanyName);
-        }
-        if (fileObracunska != null)
-        {
-            saveCalculationsListToDesktop(calculationLists.calculationListsExtractor.expenses);
-        }
-
-
+        saveToDesktop(incomeCertificate, debts);
         return RedirectToAction("UploadSuccess");
     }
     public IActionResult UploadSuccess()
@@ -61,63 +41,29 @@ public class TaxController : Controller
         return View("~/Views/Magic/Magic.cshtml");
     }
 
-    private void saveBothToDesktop(List<Debt> debtsList, List<string> listForPrint, string CompanyName)
+    private void saveToDesktop(IncomeCertificateViewModel incomeCertificate, DebtsViewModel debts)
     {
-        string fileName = CompanyName.Replace(" ", "");
+        string fileName = string.Empty;
+
+        if (!string.IsNullOrEmpty(incomeCertificate.incomeCertificateExtractor.CompanyName))
+        {
+            fileName = incomeCertificate.incomeCertificateExtractor.CompanyName.Replace(" ", "");
+        }
+
         string fileExtension = ".csv";
         string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
         string filePath = Path.Combine(desktopPath, fileName + timestamp + fileExtension);
 
-        using (var writer = new StreamWriter(filePath))
-        using (var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)))
+        if (incomeCertificate.incomeCertificateExtractor.workersList.Count > 0)
         {
-            csv.WriteField("ANALITICKA KARTICA");
-            csv.NextRecord();
-            foreach (var item in debtsList)
-            {
-                csv.WriteField(item.Ammount);
-                csv.WriteField(item.Month);
-
-                csv.NextRecord();
-            }
-            csv.WriteField("PPP PO POTVRDE");
-            csv.NextRecord();
-            foreach (var item in listForPrint)
-            {
-                csv.WriteField(item);
-                csv.NextRecord();
-            }
+            incomeCertificate.incomeCertificateExtractor.WriteToFile(filePath);
         }
-    }
-    private void saveCalculationsListToDesktop(Dictionary<string, List<Expense>> expenses)
-    {
-        string fileName = "ObracunskaLista" + DateTime.Now.ToString("MMMM");
-        string fileExtension = ".csv";
-        string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
-        string filePath = Path.Combine(desktopPath, fileName + timestamp + fileExtension);
-
-        using (var writer = new StreamWriter(filePath))
-        using (var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)))
+        if (debts.debtsExtractor.Debts.Count > 0)
         {
-            foreach (var item in expenses)
-            {
-                csv.WriteField(item.Key);
-                csv.NextRecord();
-                foreach (var expense in item.Value)
-                {
-                    csv.WriteField(expense.Percentage);
-                }
-                csv.NextRecord();
-                foreach (var expense in item.Value)
-                {
-                    csv.WriteField(expense.Ammount);
-                }
-                csv.NextRecord();
-
-            }
+            debts.debtsExtractor.WriteToFile(filePath);
         }
+
     }
 
 }

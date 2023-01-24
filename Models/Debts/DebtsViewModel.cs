@@ -7,7 +7,7 @@ namespace Klarinator3000.Models
 {
     public class DebtsViewModel
     {
-        public DebtsExtractor? debtsExtractor;
+        public DebtsExtractor debtsExtractor;
         public DebtsViewModel(IFormFile inputPdf)
         {
             debtsExtractor = new DebtsExtractor(inputPdf);

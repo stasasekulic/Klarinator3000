@@ -11,11 +11,10 @@ namespace Klarinator3000.Models
     public class DebtsExtractor
     {
         private PdfTextExtract _PdfTextExtract;
-        public List<Debt> Debts;
+        public List<Debt> Debts = new List<Debt>();
         public DebtsExtractor(IFormFile inputPdf)
         {
             _PdfTextExtract = new PdfTextExtract(inputPdf);
-            Debts = new List<Debt>();
             ExtractDebts();
         }
         public string ExtractCompanyNameFromPdfPage()

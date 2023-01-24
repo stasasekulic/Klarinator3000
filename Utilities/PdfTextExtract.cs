@@ -7,11 +7,10 @@ namespace Klarinator3000.Utilities
     public class PdfTextExtract
     {
         public List<string> PdfPages = new List<string>();
-        private ITextExtractionStrategy _Strategy;
+        private ITextExtractionStrategy _Strategy = new SimpleTextExtractionStrategy();
         private string PdfFilePath = String.Empty;
-        public PdfTextExtract(IFormFile pdf, ITextExtractionStrategy? strategy = default)
+        public PdfTextExtract(IFormFile pdf)
         {
-            this._Strategy = strategy ?? new SimpleTextExtractionStrategy();
             UploadPdf(pdf);
         }
         private void UploadPdf(IFormFile pdf)
