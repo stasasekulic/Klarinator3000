@@ -15,7 +15,7 @@ namespace Klarinator3000.Models
         public DebtsExtractor(IFormFile inputPdf)
         {
             _PdfTextExtract = new PdfTextExtract(inputPdf);
-            ExtractDebts();
+            ExtractDebts(inputPdf);
         }
         public string ExtractCompanyNameFromPdfPage()
         {
@@ -34,9 +34,9 @@ namespace Klarinator3000.Models
             }
             return result;
         }
-        private void ExtractDebts()
+        private void ExtractDebts(IFormFile inputPdf)
         {
-            _PdfTextExtract.ExtractTextFromPages();
+            _PdfTextExtract.ExtractTextFromPages(inputPdf);
             foreach (var _page in _PdfTextExtract.PdfPages)
             {
                 List<String> page = _page.Split(Tokens.NewLineToken).ToList();

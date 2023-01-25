@@ -12,7 +12,7 @@ namespace Klarinator3000.Models
         public CalculationListsExtractor(IFormFile inputPdf)
         {
             _PdfTextExtractor = new PdfTextExtract(inputPdf);
-            ExtractExpenses();
+            ExtractExpenses(inputPdf);
         }
         public string ExtractWorkerNameFromPdfPage(string _page)
         {
@@ -24,9 +24,9 @@ namespace Klarinator3000.Models
 
             return result;
         }
-        private void ExtractExpenses()
+        private void ExtractExpenses(IFormFile inputPdf)
         {
-            _PdfTextExtractor.ExtractTextFromPages();
+            _PdfTextExtractor.ExtractTextFromPages(inputPdf);
             foreach (var _page in _PdfTextExtractor.PdfPages)
             {
                 var WorkerKey = ExtractWorkerNameFromPdfPage(_page);
